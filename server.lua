@@ -1,5 +1,9 @@
 local OX_INVENTORY_RESOURCE_NAME <const> = 'ox_inventory'
 local RESOURCE_PATH <const> = GetResourcePath(OX_INVENTORY_RESOURCE_NAME)
+if not RESOURCE_PATH then
+    error(string.format("%s resource not found. Please ensure %s is present in your resource folder. If you have renamed ox_inventory please update the OX_INVENTORY_RESOURCE_NAME variable in server.lua", OX_INVENTORY_RESOURCE_NAME, OX_INVENTORY_RESOURCE_NAME))
+end
+
 local IMAGES_FOLDER <const> = RESOURCE_PATH..'/web/images'
 
 -- Valid image file extensions
