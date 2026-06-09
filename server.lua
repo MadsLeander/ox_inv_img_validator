@@ -228,10 +228,37 @@ RegisterCommand('cleanup_inventory_images', function(source, args, raw)
     if not imageFiles then return end
 
     local unusedCount, unusedImages = getUnusedImages(itemImages, imageFiles)
-
     if unusedCount <= 0 then
         return print("No unused images found. Cleanup not required.")
     end
+
+    deleteImages(unusedImages)
+end, true)
+
+RegisterCommand('move_unused_inventory_images', function(source, args, raw)
+    if source ~= 0 then return end -- Only allow server console to run this command
+
+    local itemImages = getItemImages()
+    local imageFiles = getItemImageFiles()
+    if not imageFiles then return end
+
+    local unusedCount, unusedImages = getUnusedImages(itemImages, imageFiles)
+    if unusedCount <= 0 then
+        return print("No unused images found.")
+    end
+
+    local movedCount = 0
+    local destination = IMAGES_FOLDER..'/unused/'
+
+    for _index, imageFile in pairs(unusedImages) do
+        local oldpath = IMAGES_FOLDER..'/'..imageFile
+        local newPath = destination..imageFile
+        local success, err = os.rename(oldpath, newPath)
+
+        movedCount += 1
+    end
+
+    print("Moving complete. Moved "..movedCount.." images!")
 
     deleteImages(unusedImages)
 end, true)
