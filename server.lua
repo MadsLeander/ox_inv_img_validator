@@ -109,14 +109,17 @@ local function getItemImageFiles()
     for imageFile in imageFolder:lines() do
         local imageName = imageFile:gsub('%.%w+$', '')
         local extension = imageFile:match('%.([^.]+)$')
-        extension = extension and extension:lower()
 
         if IMAGE_EXTENSIONS[extension] then
             if not imageFiles[imageName] then
                 imageFiles[imageName] = imageFile
             end
         elseif extension then
-            print(string.format("Ignoring file '%s' as it does not have a valid image extension (%s). Is this file even supposed to be here?", imageFile, extension))
+            if IMAGE_EXTENSIONS[extension:lower()] then
+                print(string.format("Image file '%s' has an invalid image extension variation (%s). ox_inventory does not support uppercase extensions.", imageFile, extension))
+            else
+                print(string.format("Ignoring file '%s' as it does not have a valid image extension (%s). Is this file even supposed to be here?", imageFile, extension))
+            end
         end
     end
 
